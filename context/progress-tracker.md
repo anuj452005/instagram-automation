@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 4 implementation (User Database Schema).
+- Begin Unit 6 implementation (Frontend Clerk Authentication Integration).
 
 ## Completed
 
@@ -21,6 +21,8 @@ Update this file after every meaningful implementation change.
 - [x] Unit 01: Database Infrastructure and Migrator Setup (Persistence)
 - [x] Unit 02: Backend Gateway and Service Health Check (API Interface)
 - [x] Unit 03: Frontend Skeleton and Theme Integration (Client)
+- [x] Unit 04: User Database Schema (Persistence)
+- [x] Unit 05: Backend Auth Sync Middleware (API Interface)
 
 ## In Progress
 
@@ -28,8 +30,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 04: User Database Schema** (Persistence)
-- **Unit 05: Backend Auth Sync Middleware** (API Interface)
 - **Unit 06: Frontend Clerk Authentication Integration** (Client)
 - **Unit 07: Instagram Account Database Schema** (Persistence)
 - **Unit 08: Instagram Token Exchange & Linking API** (API Interface)
