@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 2 implementation (Backend Gateway and Service Health Check).
+- Begin Unit 3 implementation (Frontend Skeleton and Theme Integration).
 
 ## Completed
 
@@ -19,6 +19,7 @@ Update this file after every meaningful implementation change.
 - [x] Formulate agent workflow boundaries, scoping rules, split checkpoints, and pre-transition checks in [ai-workflow-rules.md](file:///c:/gitandgithub/project2026/instagram-automaiton/context/ai-workflow-rules.md).
 - [x] Define the UI design token system, typography scales, border radiuses, and layout grids in [ui-context.md](file:///c:/gitandgithub/project2026/instagram-automaiton/context/ui-context.md).
 - [x] Unit 01: Database Infrastructure and Migrator Setup (Persistence)
+- [x] Unit 02: Backend Gateway and Service Health Check (API Interface)
 
 ## In Progress
 
@@ -26,7 +27,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 02: Backend Gateway and Service Health Check** (API Interface)
 - **Unit 03: Frontend Skeleton and Theme Integration** (Client)
 - **Unit 04: User Database Schema** (Persistence)
 - **Unit 05: Backend Auth Sync Middleware** (API Interface)
@@ -75,3 +75,4 @@ Update this file after every meaningful implementation change.
 
 - Configured initial [project-overview.md](file:///c:/gitandgithub/project2026/instagram-automaiton/context/project-overview.md).
 - Completed Unit 01 (Database Infrastructure and Migrator Setup) inside the `GramFlow` directory, configured and verified with cloud PostgreSQL migrations.
+- Completed Unit 02 (Backend Gateway and Service Health Check), setting up Express server with Zod environment checks and connectivity verification for Postgres and Redis.
