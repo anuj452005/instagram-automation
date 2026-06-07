@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+
+  --bg-base: oklch(0.141 0.005 285.82);
+  --bg-surface: oklch(0.210 0.006 285.88);
+  --bg-surface-elevated: oklch(0.274 0.006 286.03);
+  --bg-surface-elevated-hover: oklch(0.320 0.006 286.03);
+  
+  --text-primary: oklch(0.980 0.000 0.00);
+  --text-secondary: oklch(0.810 0.005 286.00);
+  --text-muted: oklch(0.705 0.015 286.07);
+  --text-disabled: oklch(0.420 0.005 286.00);
+  
+  --accent-primary: oklch(0.541 0.281 293.01);
+  --accent-primary-hover: oklch(0.610 0.260 293.00);
+  --accent-secondary: oklch(0.696 0.170 162.48);
+  --accent-secondary-hover: oklch(0.780 0.160 162.00);
+  --accent-ai: oklch(0.627 0.265 303.90);
+  --accent-ai-hover: oklch(0.710 0.220 304.00);
+  --accent-warning: oklch(0.769 0.188 70.08);
+  
+  --state-error: oklch(0.650 0.200 15.00);
+  --state-error-hover: oklch(0.720 0.180 15.00);
+  
+  --border-default: oklch(1.000 0.000 0.00 / 0.08);
+  --border-hover: oklch(1.000 0.000 0.00 / 0.15);
+  --border-focus: oklch(0.541 0.281 293.01 / 0.4);
+
+  --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Fira Code', monospace;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
