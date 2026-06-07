@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -16,3 +16,25 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const instagramAccounts = pgTable('instagram_accounts', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  username: varchar('username', { length: 255 }).notNull(),
+  name: varchar('name', { length: 255 }),
+  profilePictureUrl: text('profile_picture_url'),
+  fbPageId: varchar('fb_page_id', { length: 255 }).notNull(),
+  fbPageAccessToken: text('fb_page_access_token').notNull(),
+  tokenStatus: varchar('token_status', { length: 50 }).default('valid').notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+  followersCount: integer('followers_count').default(0).notNull(),
+  connectedAt: timestamp('connected_at').defaultNow().notNull(),
+  lastTokenRefresh: timestamp('last_token_refresh'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    userInstagramUniqueIndex: uniqueIndex('user_instagram_unique_idx').on(table.userId, table.id),
+  };
+});
+
