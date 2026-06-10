@@ -6,6 +6,8 @@ import { LoginPage } from './pages/LoginPage';
 import { SignUpPage } from './pages/SignUpPage';
 import { DashboardLayout } from './pages/DashboardLayout';
 import { AccountsPage } from './pages/AccountsPage';
+import { AutomationsListPage } from './pages/AutomationsListPage';
+import { AutomationBuilderPage } from './pages/AutomationBuilderPage';
 import {
   BarChart3,
   ChevronRight,
@@ -49,14 +51,6 @@ function WorkspacePlaceholder({ name, unit, icon: Icon }: { name: string; unit: 
 
 function AnalyticsPage() {
   return <WorkspacePlaceholder name="analytics" unit="26" icon={BarChart3} />;
-}
-
-function CampaignsPage() {
-  return <WorkspacePlaceholder name="campaigns" unit="12 (Automations Builder)" icon={Zap} />;
-}
-
-function AutomationsPage() {
-  return <WorkspacePlaceholder name="automations" unit="12 (Automations CRUD)" icon={Workflow} />;
 }
 
 function MessagesPage() {
@@ -460,8 +454,10 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<DashboardHome />} />
               <Route path="analytics" element={<AnalyticsPage />} />
-              <Route path="campaigns" element={<CampaignsPage />} />
-              <Route path="automations" element={<AutomationsPage />} />
+              <Route path="campaigns" element={<AutomationsListPage />} />
+              <Route path="automations" element={<AutomationsListPage />} />
+              <Route path="automations/new" element={<AutomationBuilderPage />} />
+              <Route path="automations/:id" element={<AutomationBuilderPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="accounts" element={<AccountsPage />} />

@@ -5,6 +5,7 @@ import { env } from './config/env';
 import { healthRouter } from './routes/health';
 import { authRouter } from './routes/auth';
 import { accountsRouter } from './routes/accounts';
+import { automationsRouter } from './routes/automations';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 app.use(healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/accounts', accountsRouter);
+app.use('/api/automations', automationsRouter);
 
 // Global Error Handler
 app.use(errorHandler);

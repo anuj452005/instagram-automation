@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth, useUser, UserButton } from '@clerk/clerk-react';
-import { Navigate, Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, NavLink, useLocation, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/axios';
 import {
@@ -346,10 +346,10 @@ export const DashboardLayout: React.FC = () => {
             <button className="size-10 rounded-lg bg-[#121214] border border-white/5 p-0 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/10 transition-all">
               <Bell className="size-4" />
             </button>
-            <button className="rounded-lg bg-[#7f22fe] hover:bg-[#9647ff] text-white px-4 py-2 text-sm font-medium flex items-center gap-2 transition-all shadow-lg shadow-[#7f22fe]/20">
+            <Link to="/dashboard/automations/new" className="rounded-lg bg-[#7f22fe] hover:bg-[#9647ff] text-white px-4 py-2 text-sm font-medium flex items-center gap-2 transition-all shadow-lg shadow-[#7f22fe]/20">
               <Plus className="size-4" />
               New Automation
-            </button>
+            </Link>
           </div>
         </header>
 

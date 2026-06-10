@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 11 implementation (Automations CRUD API).
+- Begin Unit 13 implementation (Webhook Logging Schema).
 
 ## Completed
 
@@ -28,6 +28,8 @@ Update this file after every meaningful implementation change.
 - [x] Unit 08: Instagram Token Exchange & Linking API (API Interface)
 - [x] Unit 09: Frontend Accounts Dashboard (Client)
 - [x] Unit 10: Automations Database Schema (Persistence)
+- [x] Unit 11: Automations CRUD API (API Interface)
+- [x] Unit 12: Frontend Automation Builder (Client)
 
 ## In Progress
 
@@ -35,8 +37,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 11: Automations CRUD API** (API Interface)
-- **Unit 12: Frontend Automation Builder** (Client)
 - **Unit 13: Webhook Logging Schema** (Persistence)
 - **Unit 14: Meta Webhook Ingestion API** (API Interface)
 - **Unit 15: Ingest Queue & Comment Worker** (Durable Queue)
