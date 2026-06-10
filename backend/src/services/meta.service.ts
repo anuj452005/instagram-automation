@@ -107,6 +107,63 @@ export class MetaService {
     }
   }
 
+  /**
+   * Sends a direct message to an Instagram user using the Page Access Token.
+   */
+  static async sendDM(pageAccessToken: string, recipientIgId: string, text: string): Promise<any> {
+    if (env.MOCK_META_API) {
+      console.log(`🤖 [MOCK Meta API] Sending DM to recipient ${recipientIgId}: "${text}"`);
+      return { message_id: `mock_msg_${Math.random().toString(36).substring(7)}` };
+    }
+
+    const url = `${this.GRAPH_API_URL}/me/messages?access_token=${pageAccessToken}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        recipient: { id: recipientIgId },
+        message: { text },
+      }),
+    });
+
+    if (!response.ok) {
+      const errPayload = await response.json().catch(() => ({}));
+      throw new Error(`Failed to send DM: ${JSON.stringify(errPayload)}`);
+    }
+
+    return await response.json();
+  }
+
+  /**
+   * Replies to a specific comment on Instagram using the Page Access Token.
+   */
+  static async replyToComment(pageAccessToken: string, commentId: string, text: string): Promise<any> {
+    if (env.MOCK_META_API) {
+      console.log(`🤖 [MOCK Meta API] Replying to comment ${commentId}: "${text}"`);
+      return { id: `mock_reply_${Math.random().toString(36).substring(7)}` };
+    }
+
+    const url = `${this.GRAPH_API_URL}/${commentId}/replies?access_token=${pageAccessToken}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: text,
+      }),
+    });
+
+    if (!response.ok) {
+      const errPayload = await response.json().catch(() => ({}));
+      throw new Error(`Failed to reply to comment: ${JSON.stringify(errPayload)}`);
+    }
+
+    return await response.json();
+  }
+
   private static getMockLinkableAccounts(): LinkableAccount[] {
     return [
       {

@@ -5,6 +5,7 @@ import { redis } from '../config/redis';
 import { db } from '../config/db';
 import { webhookEvents } from '../../../db/schema';
 import { commentQueue } from '../queues/comment.queue';
+import { leadQueue } from '../queues/lead.queue';
 
 /**
  * Handle subscription validation challenge from Meta.
@@ -33,17 +34,25 @@ export async function ingestWebhook(req: Request, res: Response) {
     const payload = req.body;
     const rawBody = (req as any).rawBody || Buffer.from(JSON.stringify(payload));
 
-    // 1. Redis deduplication logic check
-    // We expect standard comment webhooks payload to have entry -> changes -> value -> id (commentId).
     const entry = payload.entry?.[0];
+    const messaging = entry?.messaging?.[0];
     const change = entry?.changes?.[0];
-    const commentId = change?.value?.id;
 
-    // Deduplication Key:
-    // If we have a commentId, deduplicate on it. Else fallback to MD5 hash of raw body.
-    const dedupKey = commentId 
-      ? `webhook:dedup:${commentId}` 
-      : `webhook:dedup:hash:${crypto.createHash('md5').update(rawBody).digest('hex')}`;
+    const isMessaging = !!messaging;
+    const commentId = change?.value?.id;
+    const messageId = messaging?.message?.mid;
+
+    // 1. Redis deduplication logic check
+    let dedupKey: string;
+    if (isMessaging) {
+      dedupKey = messageId 
+        ? `webhook:dedup:${messageId}` 
+        : `webhook:dedup:hash:${crypto.createHash('md5').update(rawBody).digest('hex')}`;
+    } else {
+      dedupKey = commentId 
+        ? `webhook:dedup:${commentId}` 
+        : `webhook:dedup:hash:${crypto.createHash('md5').update(rawBody).digest('hex')}`;
+    }
 
     // Set NX (Not Exists) and EX (expire in 24 hours = 86400 seconds)
     const isNew = await redis.set(dedupKey, '1', 'NX', 'EX', 86400);
@@ -55,8 +64,16 @@ export async function ingestWebhook(req: Request, res: Response) {
     }
 
     // 2. Extract metadata for database logging
-    const igUserId = entry?.id || 'unknown';
-    const eventType = change?.field || 'unknown';
+    let igUserId = 'unknown';
+    let eventType = 'unknown';
+
+    if (isMessaging) {
+      igUserId = messaging?.recipient?.id || 'unknown';
+      eventType = 'messages';
+    } else {
+      igUserId = entry?.id || 'unknown';
+      eventType = change?.field || 'unknown';
+    }
 
     // 3. Persist raw event to database (Unit 13)
     const [insertedEvent] = await db
@@ -70,14 +87,30 @@ export async function ingestWebhook(req: Request, res: Response) {
       })
       .returning();
 
-    // 4. Enqueue background job via BullMQ (Unit 15)
-    await commentQueue.add('comment-ingest', {
-      webhookEventId: insertedEvent.id,
-      payload,
-    });
+    // 4. Enqueue background job via BullMQ
+    if (isMessaging) {
+      const senderId = messaging?.sender?.id;
+      const messageText = messaging?.message?.text;
 
-    const elapsed = Date.now() - startTime;
-    console.log(`🚀 Webhook ingested & queued successfully in ${elapsed}ms (DB ID: ${insertedEvent.id})`);
+      await leadQueue.add('lead-processor', {
+        igUserId: senderId,
+        igUsername: null, // Meta DM payload doesn't include username by default
+        instagramAccountId: igUserId,
+        text: messageText,
+        messageId: messageId,
+      });
+
+      const elapsed = Date.now() - startTime;
+      console.log(`🚀 Webhook (DM) ingested & queued to lead-processor in ${elapsed}ms (DB ID: ${insertedEvent.id})`);
+    } else {
+      await commentQueue.add('comment-ingest', {
+        webhookEventId: insertedEvent.id,
+        payload,
+      });
+
+      const elapsed = Date.now() - startTime;
+      console.log(`🚀 Webhook (Comment) ingested & queued to comment-ingest in ${elapsed}ms (DB ID: ${insertedEvent.id})`);
+    }
 
     // Return 200 OK under sub-200ms timing guarantee
     return res.status(200).json({ success: true, eventId: insertedEvent.id });

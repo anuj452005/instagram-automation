@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb, date } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -96,5 +96,95 @@ export const webhookEvents = pgTable('webhook_events', {
       .where(sql`processed = false AND skippable = false`),
   };
 });
+
+
+export const dmJobs = pgTable('dm_jobs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  automationId: uuid('automation_id')
+    .references(() => automations.id, { onDelete: 'cascade' })
+    .notNull(),
+  instagramAccountId: varchar('instagram_account_id', { length: 255 })
+    .references(() => instagramAccounts.id, { onDelete: 'cascade' })
+    .notNull(),
+  recipientIgId: varchar('recipient_ig_id', { length: 100 }).notNull(),
+  recipientUsername: varchar('recipient_username', { length: 100 }),
+  commentId: varchar('comment_id', { length: 100 }).notNull(),
+  commentText: text('comment_text'),
+  keywordMatched: varchar('keyword_matched', { length: 255 }),
+  messageText: text('message_text'),
+  status: varchar('status', { length: 50 }).default('queued').notNull(), // queued | sent | failed | skipped | rate_limited
+  attempts: integer('attempts').default(0).notNull(),
+  lastError: text('last_error'),
+  errorCode: varchar('error_code', { length: 100 }),
+  bullmqJobId: varchar('bullmq_job_id', { length: 255 }),
+  queuedAt: timestamp('queued_at').defaultNow().notNull(),
+  sentAt: timestamp('sent_at'),
+  failedAt: timestamp('failed_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    automationRecipientUniqueIdx: uniqueIndex('automation_recipient_unique_idx')
+      .on(table.automationId, table.recipientIgId)
+      .where(sql`status NOT IN ('failed', 'skipped') AND comment_id NOT LIKE 'dm_%'`),
+  };
+});
+
+export const leads = pgTable('leads', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  automationId: uuid('automation_id')
+      .references(() => automations.id, { onDelete: 'set null' }),
+  instagramAccountId: varchar('instagram_account_id', { length: 255 }).notNull(),
+  igUserId: varchar('ig_user_id', { length: 100 }).notNull(),
+  igUsername: varchar('ig_username', { length: 100 }),
+  email: varchar('email', { length: 255 }),
+  phone: varchar('phone', { length: 50 }),
+  fullName: varchar('full_name', { length: 255 }),
+  sourceComment: text('source_comment'),
+  sourceDmJobId: uuid('source_dm_job_id')
+    .references(() => dmJobs.id, { onDelete: 'set null' }),
+  capturedAt: timestamp('captured_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    automationIgUserUniqueIdx: uniqueIndex('automation_ig_user_unique_idx')
+      .on(table.automationId, table.igUserId),
+  };
+});
+
+export const analyticsEvents = pgTable('analytics_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  instagramAccountId: varchar('instagram_account_id', { length: 255 }).notNull(),
+  automationId: uuid('automation_id')
+    .references(() => automations.id, { onDelete: 'set null' }),
+  eventType: varchar('event_type', { length: 50 }).notNull(), // comment_received | keyword_matched | dm_sent | dm_failed | lead_collected
+  payload: jsonb('payload'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    instagramAccountIdCreatedAtIdx: index('analytics_events_ig_acct_created_at_idx').on(table.instagramAccountId, table.createdAt),
+  };
+});
+
+export const analyticsSnapshots = pgTable('analytics_snapshots', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  instagramAccountId: varchar('instagram_account_id', { length: 255 })
+    .references(() => instagramAccounts.id, { onDelete: 'cascade' })
+    .notNull(),
+  automationId: uuid('automation_id')
+    .references(() => automations.id, { onDelete: 'cascade' })
+    .notNull(),
+  date: date('date').notNull(),
+  commentsCount: integer('comments_count').default(0).notNull(),
+  keywordsMatched: integer('keywords_matched').default(0).notNull(),
+  dmsSent: integer('dms_sent').default(0).notNull(),
+  failuresCount: integer('failures_count').default(0).notNull(),
+  leadsCollected: integer('leads_collected').default(0).notNull(),
+}, (table) => {
+  return {
+    snapshotUniqueIdx: uniqueIndex('analytics_snapshots_unique_idx').on(table.instagramAccountId, table.automationId, table.date),
+  };
+});
+
 
 

@@ -8,6 +8,8 @@ import { DashboardLayout } from './pages/DashboardLayout';
 import { AccountsPage } from './pages/AccountsPage';
 import { AutomationsListPage } from './pages/AutomationsListPage';
 import { AutomationBuilderPage } from './pages/AutomationBuilderPage';
+import { LeadsPage } from './pages/LeadsPage';
+import { PublicLeadPage } from './pages/PublicLeadPage';
 import {
   BarChart3,
   ChevronRight,
@@ -449,6 +451,7 @@ export default function App() {
             {/* Public Auth Routing */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/l/:token" element={<PublicLeadPage />} />
             
             {/* Protected Workspace Layout */}
             <Route path="/dashboard" element={<DashboardLayout />}>
@@ -458,7 +461,7 @@ export default function App() {
               <Route path="automations" element={<AutomationsListPage />} />
               <Route path="automations/new" element={<AutomationBuilderPage />} />
               <Route path="automations/:id" element={<AutomationBuilderPage />} />
-              <Route path="messages" element={<MessagesPage />} />
+              <Route path="leads" element={<LeadsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="accounts" element={<AccountsPage />} />
             </Route>

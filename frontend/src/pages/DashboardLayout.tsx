@@ -13,6 +13,7 @@ import {
   Send,
   Settings,
   Sparkles,
+  Users,
   Workflow,
   Zap,
 } from 'lucide-react';
@@ -121,9 +122,9 @@ export const DashboardLayout: React.FC = () => {
   } else if (currentPath.endsWith('/automations')) {
     pageTitle = 'Automations List';
     pageDesc = 'Manage your comment-to-DM workflows and filters.';
-  } else if (currentPath.endsWith('/messages')) {
-    pageTitle = 'Message Center';
-    pageDesc = 'View sent DMs, lead captures, and response queues.';
+  } else if (currentPath.endsWith('/leads')) {
+    pageTitle = 'Leads Database';
+    pageDesc = 'Browse, search, and export follower contact details captured via campaigns.';
   } else if (currentPath.endsWith('/settings')) {
     pageTitle = 'System Settings';
     pageDesc = 'Manage credentials, developer configurations, and quotas.';
@@ -221,7 +222,7 @@ export const DashboardLayout: React.FC = () => {
             )}
           </NavLink>
           <NavLink
-            to="/dashboard/messages"
+            to="/dashboard/leads"
             className={({ isActive }) =>
               `font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-3 transition-colors text-left ${
                 isActive
@@ -232,11 +233,8 @@ export const DashboardLayout: React.FC = () => {
           >
             {({ isActive }) => (
               <>
-                <MessageCircle className={`size-4 ${isActive ? 'text-[#7f22fe]' : ''}`} />
-                Messages
-                <span className="size-5 font-semibold rounded-full bg-[#7f22fe] text-white text-[10px] flex ml-auto justify-center items-center shadow-[0_0_8px_rgba(127,34,254,0.5)]">
-                  9
-                </span>
+                <Users className={`size-4 ${isActive ? 'text-[#7f22fe]' : ''}`} />
+                Leads
               </>
             )}
           </NavLink>

@@ -7,6 +7,8 @@ import { authRouter } from './routes/auth';
 import { accountsRouter } from './routes/accounts';
 import { automationsRouter } from './routes/automations';
 import { webhooksRouter } from './routes/webhooks';
+import { publicRouter } from './routes/public-leads';
+import { leadsRouter } from './routes/leads';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -41,6 +43,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/accounts', accountsRouter);
 app.use('/api/automations', automationsRouter);
 app.use('/api/webhooks', webhooksRouter);
+app.use(publicRouter);
+app.use('/api/leads', leadsRouter);
 
 // Global Error Handler
 app.use(errorHandler);

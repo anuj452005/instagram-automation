@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 16 implementation (Automation Keyword Matcher).
+- Begin Unit 26 implementation (Frontend Analytics Metrics) and skip billing integration (Units 27–30).
 
 ## Completed
 
@@ -33,6 +33,16 @@ Update this file after every meaningful implementation change.
 - [x] Unit 13: Webhook Logging Schema (Persistence)
 - [x] Unit 14: Meta Webhook Ingestion API (API Interface)
 - [x] Unit 15: Ingest Queue & Comment Worker (Durable Queue)
+- [x] Unit 16: Automation Keyword Matcher (Durable Queue)
+- [x] Unit 17: DM Jobs Database Schema (Persistence)
+- [x] Unit 18: Rate-Limited DM Dispatch Worker (Durable Queue)
+- [x] Unit 19: Leads Database Schema (Persistence)
+- [x] Unit 20: Conversational Lead Capturing Worker (Durable Queue)
+- [x] Unit 21: Landing Page Submission API (API Interface)
+- [x] Unit 22: Frontend Leads Manager & Public Forms (Client)
+- [x] Unit 23: Scheduled Automation Activation Scheduler (Durable Queue)
+- [x] Unit 24: Analytics Database Schema (Persistence)
+- [x] Unit 25: Analytics Events Tracker Worker (Durable Queue)
 
 ## In Progress
 
@@ -40,24 +50,11 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 16: Automation Keyword Matcher** (Durable Queue)
-- **Unit 17: DM Jobs Database Schema** (Persistence)
-- **Unit 18: Rate-Limited DM Dispatch Worker** (Durable Queue)
-- **Unit 19: Leads Database Schema** (Persistence)
-- **Unit 20: Conversational Lead Capturing Worker** (Durable Queue)
-- **Unit 21: Landing Page Submission API** (API Interface)
-- **Unit 22: Frontend Leads Manager & Public Forms** (Client)
-- **Unit 23: Scheduled Automation Activation Scheduler** (Durable Queue)
-- **Unit 24: Analytics Database Schema** (Persistence)
-- **Unit 25: Analytics Events Tracker Worker** (Durable Queue)
 - **Unit 26: Frontend Analytics Metrics** (Client)
-- **Unit 27: Billing Database Columns** (Persistence)
-- **Unit 28: Razorpay Webhooks and Checkout API** (API Interface)
-- **Unit 29: Plan Limits Enforcement Middleware** (API Interface)
-- **Unit 30: Frontend Billing & Pricing Plans** (Client)
 - **Unit 31: Audit Logs & Admin Database Schema** (Persistence)
 - **Unit 32: System Administration & Queue Monitor API** (API Interface)
 - **Unit 33: Frontend Admin Workspace** (Client)
+- *(Note: Units 27–30 Billing & Pricing Plan integrations have been skipped)*
 
 ## Open Questions
 
