@@ -6,6 +6,7 @@ import { healthRouter } from './routes/health';
 import { authRouter } from './routes/auth';
 import { accountsRouter } from './routes/accounts';
 import { automationsRouter } from './routes/automations';
+import { webhooksRouter } from './routes/webhooks';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -21,7 +22,11 @@ app.use(cors({
   origin: env.FRONTEND_URL,
 }));
 
-app.use(express.json());
+app.use(express.json({
+  verify: (req: any, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
 
 // Request Logger for debugging auth synchronization
 app.use((req, res, next) => {
@@ -35,6 +40,7 @@ app.use(healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/accounts', accountsRouter);
 app.use('/api/automations', automationsRouter);
+app.use('/api/webhooks', webhooksRouter);
 
 // Global Error Handler
 app.use(errorHandler);

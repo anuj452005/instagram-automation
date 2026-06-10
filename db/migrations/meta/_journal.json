@@ -22,6 +22,13 @@
       "when": 1780904028427,
       "tag": "0002_even_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1781077566899,
+      "tag": "0003_even_greymalkin",
+      "breakpoints": true
     }
   ]
 }

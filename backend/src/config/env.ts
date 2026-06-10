@@ -23,6 +23,8 @@ const envSchema = z.object({
   // Meta App Credentials (required in production for token exchange)
   META_APP_ID: z.string().optional(),
   META_APP_SECRET: z.string().optional(),
+  // Meta Webhook Verification Token
+  META_VERIFY_TOKEN: z.string().default('gramflow_verify_token'),
 });
 
 const parsed = envSchema.safeParse(process.env);

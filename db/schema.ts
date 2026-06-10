@@ -1,4 +1,5 @@
 import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -77,4 +78,23 @@ export const automationKeywords = pgTable('automation_keywords', {
     automationIdIdx: index('automation_keywords_automation_id_idx').on(table.automationId),
   };
 });
+
+export const webhookEvents = pgTable('webhook_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  igUserId: varchar('ig_user_id', { length: 100 }).notNull(),
+  eventType: varchar('event_type', { length: 100 }).notNull(),
+  rawPayload: jsonb('raw_payload').notNull(),
+  processed: boolean('processed').default(false).notNull(),
+  skippable: boolean('skippable').default(false).notNull(),
+  processingError: text('processing_error'),
+  receivedAt: timestamp('received_at').defaultNow().notNull(),
+  processedAt: timestamp('processed_at'),
+}, (table) => {
+  return {
+    unprocessedIdx: index('webhook_events_unprocessed_idx')
+      .on(table.processed, table.receivedAt)
+      .where(sql`processed = false AND skippable = false`),
+  };
+});
+
 
