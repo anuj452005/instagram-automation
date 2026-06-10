@@ -10,6 +10,7 @@
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx db/migrate.ts",
+    "db:seed-admin": "tsx db/seed-admin.ts",
     "db:studio": "drizzle-kit studio",
     "dev:backend": "npm run dev -w backend",
     "dev:frontend": "npm run dev -w frontend",

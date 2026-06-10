@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb, date } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb, date, inet } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -185,6 +185,36 @@ export const analyticsSnapshots = pgTable('analytics_snapshots', {
     snapshotUniqueIdx: uniqueIndex('analytics_snapshots_unique_idx').on(table.instagramAccountId, table.automationId, table.date),
   };
 });
+
+export const auditLogs = pgTable('audit_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  actorType: varchar('actor_type', { length: 50 }).default('user').notNull(), // user | system | admin | worker
+  action: varchar('action', { length: 100 }).notNull(),
+  entityType: varchar('entity_type', { length: 100 }),
+  entityId: uuid('entity_id'),
+  oldData: jsonb('old_data'),
+  newData: jsonb('new_data'),
+  ipAddress: inet('ip_address'),
+  requestId: varchar('request_id', { length: 100 }),
+  occurredAt: timestamp('occurred_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    userIdOccurredAtIdx: index('audit_logs_user_occurred_idx').on(table.userId, table.occurredAt),
+    entityTypeEntityIdIdx: index('audit_logs_entity_idx').on(table.entityType, table.entityId),
+  };
+});
+
+export const adminUsers = pgTable('admin_users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: varchar('email', { length: 255 }).unique().notNull(),
+  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+  fullName: varchar('full_name', { length: 255 }).notNull(),
+  role: varchar('role', { length: 50 }).default('support').notNull(), // support | ops | superadmin
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 
 
 

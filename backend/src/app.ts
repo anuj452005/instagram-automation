@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { clerkMiddleware } from '@clerk/express';
 import { env } from './config/env';
 import { healthRouter } from './routes/health';
@@ -9,6 +10,9 @@ import { automationsRouter } from './routes/automations';
 import { webhooksRouter } from './routes/webhooks';
 import { publicRouter } from './routes/public-leads';
 import { leadsRouter } from './routes/leads';
+import { analyticsRouter } from './routes/analytics';
+import { adminRouter, serverAdapter, optionalClerkSync } from './routes/admin';
+import { adminAuthMiddleware } from './middleware/adminAuth.middleware';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -30,6 +34,8 @@ app.use(express.json({
   }
 }));
 
+app.use(cookieParser());
+
 // Request Logger for debugging auth synchronization
 app.use((req, res, next) => {
   console.log(`\n🔍 [HTTP Request] ${req.method} ${req.originalUrl}`);
@@ -45,6 +51,9 @@ app.use('/api/automations', automationsRouter);
 app.use('/api/webhooks', webhooksRouter);
 app.use(publicRouter);
 app.use('/api/leads', leadsRouter);
+app.use('/api/analytics', analyticsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/admin/queues', optionalClerkSync, adminAuthMiddleware, serverAdapter.getRouter());
 
 // Global Error Handler
 app.use(errorHandler);

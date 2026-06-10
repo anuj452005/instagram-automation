@@ -1,7 +1,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/axios';
-import { LeadsTable, Lead } from '../components/LeadsTable';
+import { LeadsTable } from '../components/LeadsTable';
+import type { Lead } from '../components/LeadsTable';
 import { Users, Mail, Phone, BarChart2 } from 'lucide-react';
 
 export const LeadsPage: React.FC = () => {

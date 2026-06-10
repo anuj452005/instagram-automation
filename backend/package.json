@@ -9,8 +9,12 @@
     "start": "node dist/backend/src/index.js"
   },
   "dependencies": {
+    "@bull-board/api": "^7.2.1",
+    "@bull-board/express": "^7.2.1",
     "@clerk/express": "^2.1.23",
+    "@types/cookie-parser": "^1.4.10",
     "bullmq": "^5.78.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",

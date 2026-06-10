@@ -50,6 +50,13 @@
       "when": 1781081510853,
       "tag": "0006_old_betty_ross",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1781082528260,
+      "tag": "0007_high_wendell_rand",
+      "breakpoints": true
     }
   ]
 }

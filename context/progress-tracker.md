@@ -43,6 +43,10 @@ Update this file after every meaningful implementation change.
 - [x] Unit 23: Scheduled Automation Activation Scheduler (Durable Queue)
 - [x] Unit 24: Analytics Database Schema (Persistence)
 - [x] Unit 25: Analytics Events Tracker Worker (Durable Queue)
+- [x] Unit 26: Frontend Analytics Metrics (Client)
+- [x] Unit 31: Audit Logs & Admin Database Schema (Persistence)
+- [x] Unit 32: System Administration & Queue Monitor API (API Interface)
+- [x] Unit 33: Frontend Admin Workspace (Client)
 
 ## In Progress
 
@@ -50,10 +54,7 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 26: Frontend Analytics Metrics** (Client)
-- **Unit 31: Audit Logs & Admin Database Schema** (Persistence)
-- **Unit 32: System Administration & Queue Monitor API** (API Interface)
-- **Unit 33: Frontend Admin Workspace** (Client)
+- None (all core units completed).
 - *(Note: Units 27–30 Billing & Pricing Plan integrations have been skipped)*
 
 ## Open Questions

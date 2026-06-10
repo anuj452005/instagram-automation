@@ -7,7 +7,6 @@ import {
   BarChart3,
   Bell,
   LayoutDashboard,
-  MessageCircle,
   Plus,
   Search,
   Send,
@@ -16,6 +15,7 @@ import {
   Users,
   Workflow,
   Zap,
+  ShieldAlert,
 } from 'lucide-react';
 import { Instagram } from '../components/icons';
 
@@ -26,6 +26,7 @@ export interface UserProfile {
   email: string;
   subscriptionTier: 'free' | 'pro';
   subscriptionStatus: string;
+  role: string;
 }
 
 export const DashboardLayout: React.FC = () => {
@@ -272,6 +273,15 @@ export const DashboardLayout: React.FC = () => {
               </>
             )}
           </NavLink>
+          {dbUser?.role === 'admin' && (
+            <NavLink
+              to="/admin"
+              className="font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-3 transition-all text-left text-red-400 hover:text-red-300 hover:bg-red-500/5 border border-red-500/10 hover:border-red-500/20"
+            >
+              <ShieldAlert className="size-4 text-red-500 shrink-0" />
+              System Admin
+            </NavLink>
+          )}
         </nav>
 
         {/* Pro Plan Box */}
