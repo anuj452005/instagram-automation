@@ -16,6 +16,7 @@ import {
   Workflow,
   Zap,
 } from 'lucide-react';
+import { Instagram } from '../components/icons';
 
 export interface UserProfile {
   id: string;
@@ -27,7 +28,7 @@ export interface UserProfile {
 }
 
 export const DashboardLayout: React.FC = () => {
-  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
+  const { isLoaded: isAuthLoaded, isSignedIn, getToken } = useAuth();
   const { user } = useUser();
   const location = useLocation();
 
@@ -35,7 +36,12 @@ export const DashboardLayout: React.FC = () => {
   const { data: dbUser, isLoading: isDbSyncLoading, error: syncError } = useQuery<UserProfile>({
     queryKey: ['me'],
     queryFn: async () => {
-      const response = await api.get('/api/auth/me');
+      const token = await getToken();
+      const response = await api.get('/api/auth/me', {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : undefined,
+        },
+      });
       return response.data;
     },
     enabled: !!isSignedIn,
@@ -121,6 +127,9 @@ export const DashboardLayout: React.FC = () => {
   } else if (currentPath.endsWith('/settings')) {
     pageTitle = 'System Settings';
     pageDesc = 'Manage credentials, developer configurations, and quotas.';
+  } else if (currentPath.endsWith('/accounts')) {
+    pageTitle = 'Instagram Accounts';
+    pageDesc = 'Link and manage connected Instagram Creator or Business profiles.';
   }
 
   return (
@@ -228,6 +237,23 @@ export const DashboardLayout: React.FC = () => {
                 <span className="size-5 font-semibold rounded-full bg-[#7f22fe] text-white text-[10px] flex ml-auto justify-center items-center shadow-[0_0_8px_rgba(127,34,254,0.5)]">
                   9
                 </span>
+              </>
+            )}
+          </NavLink>
+          <NavLink
+            to="/dashboard/accounts"
+            className={({ isActive }) =>
+              `font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-3 transition-colors text-left ${
+                isActive
+                  ? 'bg-[#1a1a1e] text-white'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#1a1a1e]/50'
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Instagram className={`size-4 ${isActive ? 'text-[#7f22fe]' : ''}`} />
+                Instagram Accounts
               </>
             )}
           </NavLink>

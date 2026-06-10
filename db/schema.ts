@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, integer, text, boolean, uniqueIndex, index, jsonb } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -35,6 +35,46 @@ export const instagramAccounts = pgTable('instagram_accounts', {
 }, (table) => {
   return {
     userInstagramUniqueIndex: uniqueIndex('user_instagram_unique_idx').on(table.userId, table.id),
+  };
+});
+
+export const automations = pgTable('automations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  instagramAccountId: varchar('instagram_account_id', { length: 255 })
+    .references(() => instagramAccounts.id, { onDelete: 'cascade' })
+    .notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  status: varchar('status', { length: 50 }).default('draft').notNull(), // draft | active | paused | archived
+  postId: varchar('post_id', { length: 255 }), // null = global trigger
+  postUrl: text('post_url'),
+  postType: varchar('post_type', { length: 20 }), // FEED | REEL | STORY
+  flowType: varchar('flow_type', { length: 50 }).notNull(), // dm | landing_page
+  dmTemplate: text('dm_template').notNull(),
+  collectLeads: boolean('collect_leads').default(false).notNull(),
+  leadFields: jsonb('lead_fields').default(['email']).$type<string[]>(),
+  landingPageToken: varchar('landing_page_token', { length: 100 }),
+  alsoReplyComment: boolean('also_reply_comment').default(false).notNull(),
+  commentReplyText: text('comment_reply_text'),
+  scheduledActivateAt: timestamp('scheduled_activate_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    instagramAccountIdIdx: index('automations_instagram_account_id_idx').on(table.instagramAccountId),
+  };
+});
+
+export const automationKeywords = pgTable('automation_keywords', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  automationId: uuid('automation_id')
+    .references(() => automations.id, { onDelete: 'cascade' })
+    .notNull(),
+  keyword: varchar('keyword', { length: 255 }).notNull(),
+  matchType: varchar('match_type', { length: 50 }).default('exact').notNull(), // exact | contains | starts_with
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    automationIdIdx: index('automation_keywords_automation_id_idx').on(table.automationId),
   };
 });
 

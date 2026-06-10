@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { CLERK_PUBLISHABLE_KEY } from './lib/clerk';
 import { LoginPage } from './pages/LoginPage';
+import { SignUpPage } from './pages/SignUpPage';
 import { DashboardLayout } from './pages/DashboardLayout';
+import { AccountsPage } from './pages/AccountsPage';
 import {
   BarChart3,
   ChevronRight,
@@ -452,6 +454,7 @@ export default function App() {
           <Routes>
             {/* Public Auth Routing */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
             
             {/* Protected Workspace Layout */}
             <Route path="/dashboard" element={<DashboardLayout />}>
@@ -461,6 +464,7 @@ export default function App() {
               <Route path="automations" element={<AutomationsPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="accounts" element={<AccountsPage />} />
             </Route>
 
             {/* Default Catch-all Redirect */}

@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 8 implementation (Instagram Token Exchange & Linking API).
+- Begin Unit 11 implementation (Automations CRUD API).
 
 ## Completed
 
@@ -25,6 +25,9 @@ Update this file after every meaningful implementation change.
 - [x] Unit 05: Backend Auth Sync Middleware (API Interface)
 - [x] Unit 06: Frontend Clerk Authentication Integration (Client)
 - [x] Unit 07: Instagram Account Database Schema (Persistence)
+- [x] Unit 08: Instagram Token Exchange & Linking API (API Interface)
+- [x] Unit 09: Frontend Accounts Dashboard (Client)
+- [x] Unit 10: Automations Database Schema (Persistence)
 
 ## In Progress
 
@@ -32,9 +35,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 08: Instagram Token Exchange & Linking API** (API Interface)
-- **Unit 09: Frontend Accounts Dashboard** (Client)
-- **Unit 10: Automations Database Schema** (Persistence)
 - **Unit 11: Automations CRUD API** (API Interface)
 - **Unit 12: Frontend Automation Builder** (Client)
 - **Unit 13: Webhook Logging Schema** (Persistence)

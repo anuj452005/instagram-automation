@@ -15,6 +15,13 @@
       "when": 1780833515782,
       "tag": "0001_overconfident_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780904028427,
+      "tag": "0002_even_wilson_fisk",
+      "breakpoints": true
     }
   ]
 }

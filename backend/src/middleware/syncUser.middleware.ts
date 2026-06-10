@@ -3,10 +3,12 @@ import { db } from '../config/db';
 import { users } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import { clerkClient } from '@clerk/express';
+import { resolveRequestAuth } from './auth.utils';
 
 export const syncUser = async (req: Request, res: Response, next: NextFunction) => {
-  const auth = req.auth;
-  if (!auth || !auth.userId) {
+  const auth = resolveRequestAuth(req);
+
+  if (!auth?.userId) {
     return res.status(401).json({
       success: false,
       error: {
@@ -19,7 +21,6 @@ export const syncUser = async (req: Request, res: Response, next: NextFunction) 
   const clerkUserId = auth.userId;
 
   try {
-    // 1. Check if user already exists in local DB
     const existingUsers = await db.select().from(users).where(eq(users.clerkUserId, clerkUserId)).limit(1);
 
     if (existingUsers.length > 0) {
@@ -27,11 +28,9 @@ export const syncUser = async (req: Request, res: Response, next: NextFunction) 
       return next();
     }
 
-    // 2. User doesn't exist, extract claims
-    let email = auth.sessionClaims?.email || auth.sessionClaims?.email_address;
-    let name = auth.sessionClaims?.name || auth.sessionClaims?.full_name;
+    let email = (auth.sessionClaims?.email || auth.sessionClaims?.email_address) as string | undefined;
+    let name = (auth.sessionClaims?.name || auth.sessionClaims?.full_name) as string | undefined;
 
-    // Optional: Fetch from Clerk API if claims are incomplete and we have a secret key
     if ((!email || !name) && process.env.CLERK_SECRET_KEY) {
       try {
         const clerkUser = await clerkClient.users.getUser(clerkUserId);
@@ -42,11 +41,9 @@ export const syncUser = async (req: Request, res: Response, next: NextFunction) 
       }
     }
 
-    // Fallbacks
     email = email || 'user@example.com';
     name = name || 'GramFlow User';
 
-    // 3. Create user in PostgreSQL
     const [newUser] = await db.insert(users).values({
       clerkUserId,
       name,
