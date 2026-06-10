@@ -9,7 +9,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Begin Unit 13 implementation (Webhook Logging Schema).
+- Begin Unit 16 implementation (Automation Keyword Matcher).
 
 ## Completed
 
@@ -30,6 +30,9 @@ Update this file after every meaningful implementation change.
 - [x] Unit 10: Automations Database Schema (Persistence)
 - [x] Unit 11: Automations CRUD API (API Interface)
 - [x] Unit 12: Frontend Automation Builder (Client)
+- [x] Unit 13: Webhook Logging Schema (Persistence)
+- [x] Unit 14: Meta Webhook Ingestion API (API Interface)
+- [x] Unit 15: Ingest Queue & Comment Worker (Durable Queue)
 
 ## In Progress
 
@@ -37,9 +40,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- **Unit 13: Webhook Logging Schema** (Persistence)
-- **Unit 14: Meta Webhook Ingestion API** (API Interface)
-- **Unit 15: Ingest Queue & Comment Worker** (Durable Queue)
 - **Unit 16: Automation Keyword Matcher** (Durable Queue)
 - **Unit 17: DM Jobs Database Schema** (Persistence)
 - **Unit 18: Rate-Limited DM Dispatch Worker** (Durable Queue)
