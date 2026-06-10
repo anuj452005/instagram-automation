@@ -1,0 +1,67 @@
+# render.yaml — GramFlow Render Deployment Blueprint
+# This file defines both services so Render can deploy them together.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ─────────────────────────────────────────────
+  # 1. Backend: Express API + BullMQ Workers
+  # ─────────────────────────────────────────────
+  - type: web
+    name: gramflow-backend
+    runtime: node
+    rootDir: .
+    buildCommand: npm install && npm run build:backend
+    startCommand: node backend/dist/backend/src/index.js
+    healthCheckPath: /health
+    plan: starter          # $7/mo — no sleep. Use 'free' to test first.
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000        # Render injects $PORT; 10000 is Render's default
+      - key: FRONTEND_URL
+        sync: false         # You fill this in Render dashboard after frontend deploys
+      - key: DATABASE_URL
+        sync: false         # Paste your Neon URL
+      - key: REDIS_URL
+        sync: false         # Paste your Upstash URL
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false         # pk_live_... from Clerk dashboard
+      - key: CLERK_SECRET_KEY
+        sync: false         # sk_live_... from Clerk dashboard
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: META_VERIFY_TOKEN
+        sync: false
+      - key: MOCK_META_API
+        value: "false"
+      - key: ENCRYPTION_KEY
+        generateValue: true  # Render auto-generates a secure random string
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure random string
+
+  # ─────────────────────────────────────────────
+  # 2. Frontend: React + Vite Static Site
+  # ─────────────────────────────────────────────
+  - type: static
+    name: gramflow-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      # SPA fallback — all routes serve index.html (client-side routing)
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        sync: false         # pk_live_... from Clerk dashboard
+      - key: VITE_API_URL
+        sync: false         # https://gramflow-backend.onrender.com (your backend URL)

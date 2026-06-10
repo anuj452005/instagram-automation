@@ -1,18 +1,22 @@
-import Redis from 'ioredis';
 import { env } from '../config/env';
 
 /**
- * Creates a dedicated ioredis client instance configured for BullMQ components (queues/workers).
- * BullMQ requires `maxRetriesPerRequest: null` connection options.
+ * Returns a BullMQ-compatible connection options object parsed from REDIS_URL.
+ * Passing an options object (not an ioredis instance) avoids the dual-ioredis
+ * TypeScript incompatibility between the root ioredis and BullMQ's bundled copy.
  */
-export function createRedisClient() {
-  const client = new Redis(env.REDIS_URL, {
-    maxRetriesPerRequest: null,
-  });
+export function createRedisConnection() {
+  const url = new URL(env.REDIS_URL);
 
-  client.on('error', (err) => {
-    console.error('❌ BullMQ Redis Client Error:', err);
-  });
-
-  return client;
+  return {
+    host: url.hostname,
+    port: Number(url.port) || 6379,
+    password: url.password || undefined,
+    username: url.username || undefined,
+    tls: url.protocol === 'rediss:' ? {} : undefined,
+    maxRetriesPerRequest: null, // Required by BullMQ
+  };
 }
+
+// Legacy alias — workers that call createRedisClient() still work
+export const createRedisClient = createRedisConnection;

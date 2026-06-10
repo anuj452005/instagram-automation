@@ -10,8 +10,9 @@ import { dmQueue } from '../queues/dm.queue';
 import { leadQueue } from '../queues/lead.queue';
 import { analyticsQueue } from '../queues/analytics.queue';
 import { schedulerQueue } from '../queues/scheduler.queue';
+import { env } from '../config/env';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+const JWT_SECRET = env.JWT_SECRET;
 
 export const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {

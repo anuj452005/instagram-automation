@@ -54,8 +54,8 @@ export async function ingestWebhook(req: Request, res: Response) {
         : `webhook:dedup:hash:${crypto.createHash('md5').update(rawBody).digest('hex')}`;
     }
 
-    // Set NX (Not Exists) and EX (expire in 24 hours = 86400 seconds)
-    const isNew = await redis.set(dedupKey, '1', 'NX', 'EX', 86400);
+    // Set with EX (expire 24h) + NX (only if not exists) — ioredis v5 argument order
+    const isNew = await redis.set(dedupKey, '1', 'EX', 86400, 'NX');
 
     if (!isNew) {
       console.log(`ℹ️ Duplicate webhook event ignored. Key: ${dedupKey}`);

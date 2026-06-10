@@ -8,7 +8,7 @@ const isSslRequired = env.DATABASE_URL.includes('sslmode=require') || env.NODE_E
 export const pool = new Pool({
   connectionString: env.DATABASE_URL,
   ssl: isSslRequired ? { rejectUnauthorized: false } : false,
-  max: 20, // tuned for Azure Container Apps scale-to-zero model
+  max: 5, // Neon free tier connection limit friendly
 });
 
 export const db = drizzle(pool, { schema });

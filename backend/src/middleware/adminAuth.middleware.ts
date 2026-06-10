@@ -3,8 +3,9 @@ import * as jwt from 'jsonwebtoken';
 import { db } from '../config/db';
 import { adminUsers } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
+import { env } from '../config/env';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+const JWT_SECRET = env.JWT_SECRET;
 
 export const adminAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   // 1. Check if user is a Clerk user synced with "admin" role

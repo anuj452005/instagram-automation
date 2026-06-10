@@ -25,6 +25,8 @@ const envSchema = z.object({
   META_APP_SECRET: z.string().optional(),
   // Meta Webhook Verification Token
   META_VERIFY_TOKEN: z.string().default('gramflow_verify_token'),
+  // JWT secret for admin token signing
+  JWT_SECRET: z.string().default('dev-secret'),
 });
 
 const parsed = envSchema.safeParse(process.env);

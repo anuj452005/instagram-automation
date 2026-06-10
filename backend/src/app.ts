@@ -36,12 +36,14 @@ app.use(express.json({
 
 app.use(cookieParser());
 
-// Request Logger for debugging auth synchronization
-app.use((req, res, next) => {
-  console.log(`\n🔍 [HTTP Request] ${req.method} ${req.originalUrl}`);
-  console.log(`   Headers authorization: ${req.headers.authorization ? 'Present (' + req.headers.authorization.substring(0, 30) + '...)' : 'Missing'}`);
-  next();
-});
+// Request Logger for debugging auth synchronization (dev only)
+if (env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`\n🔍 [HTTP Request] ${req.method} ${req.originalUrl}`);
+    console.log(`   Headers authorization: ${req.headers.authorization ? 'Present (' + req.headers.authorization.substring(0, 30) + '...)' : 'Missing'}`);
+    next();
+  });
+}
 
 // Routes
 app.use(healthRouter);
