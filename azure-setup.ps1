@@ -244,7 +244,7 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
     gh secret set AZURE_WEBAPP_NAME --body "$BACKEND_WEBAPP_NAME"
     Write-Host "  [OK] AZURE_WEBAPP_NAME" -ForegroundColor Green
 
-    gh secret set AZURE_WEBAPP_PUBLISH_PROFILE --body "$PUB_PROFILE"
+    $PUB_PROFILE | gh secret set AZURE_WEBAPP_PUBLISH_PROFILE
     Write-Host "  [OK] AZURE_WEBAPP_PUBLISH_PROFILE" -ForegroundColor Green
 
     gh secret set VITE_API_URL --body "$BACKEND_URL"
