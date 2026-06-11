@@ -41,6 +41,12 @@ services:
         generateValue: true  # Render auto-generates a secure random string
       - key: JWT_SECRET
         generateValue: true  # Render auto-generates a secure random string
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
 
   # ─────────────────────────────────────────────
   # 2. Frontend: React + Vite Static Site

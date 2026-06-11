@@ -1,16 +1,16 @@
 name: Deploy Backend to Azure App Service
 
 on:
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch: # Allow manual triggering
   push:
     branches:
       - main
     paths:
-      - 'backend/**'
-      - 'db/**'
-      - 'drizzle.config.ts'
-      - 'package.json'
-      - 'package-lock.json'
+      - "backend/**"
+      - "db/**"
+      - "drizzle.config.ts"
+      - "package.json"
+      - "package-lock.json"
 
 jobs:
   build-and-deploy:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install All Workspace Dependencies
         run: npm install
@@ -38,7 +38,7 @@ jobs:
         #   /db/                  - drizzle schema & migrations
         #   /package.json         - root workspace
         #   /package-lock.json    - lockfile for reproducible installs
-        # SCM_DO_BUILD_DURING_DEPLOYMENT=false because we package node_modules on the runner
+        # SCM_DO_BUILD_DURING_DEPLOYMENT=true tells Azure to run npm install on the server
         run: |
           mkdir -p deploy_pkg/backend
           cp -r backend/dist  deploy_pkg/backend/dist
@@ -46,16 +46,11 @@ jobs:
           cp -r db            deploy_pkg/db
           cp    package.json  deploy_pkg/package.json
           cp    package-lock.json deploy_pkg/package-lock.json
-          
+
           # Create dummy frontend workspace to satisfy npm workspace resolution
           mkdir -p deploy_pkg/frontend
           echo '{"name": "gramflow-frontend", "version": "1.0.0"}' > deploy_pkg/frontend/package.json
-          
-          # Install production dependencies directly inside the package folder
-          cd deploy_pkg
-          npm install --omit=dev
-          cd ..
-          
+
           cd deploy_pkg
           zip -r ../deploy.zip .
           cd ..
@@ -66,4 +61,4 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: './deploy.zip'
+          package: "./deploy.zip"

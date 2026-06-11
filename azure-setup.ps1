@@ -221,7 +221,7 @@ $settings = @(
   @{ name = "META_APP_SECRET"; value = $envVars['META_APP_SECRET'] },
   @{ name = "META_VERIFY_TOKEN"; value = $envVars['META_VERIFY_TOKEN'] },
   @{ name = "MOCK_META_API"; value = "false" },
-  @{ name = "SCM_DO_BUILD_DURING_DEPLOYMENT"; value = "false" },
+  @{ name = "SCM_DO_BUILD_DURING_DEPLOYMENT"; value = "true" },
   @{ name = "WEBSITE_NODE_DEFAULT_VERSION"; value = "~22" }
 )
 

@@ -66,6 +66,13 @@ interface YouTubeJob {
   createdAt: string;
 }
 
+const getErrorMessage = (err: any, fallback: string): string => {
+  const errorData = err.response?.data?.error;
+  if (typeof errorData === 'string') return errorData;
+  if (errorData?.message && typeof errorData.message === 'string') return errorData.message;
+  return fallback;
+};
+
 export const YoutubeDashboardPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -119,7 +126,7 @@ export const YoutubeDashboardPage: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: ['youtube-account'] });
         } catch (err: any) {
           console.error(err);
-          setErrorMessage(err.response?.data?.error || 'Failed to exchange authorization tokens.');
+          setErrorMessage(getErrorMessage(err, 'Failed to exchange authorization tokens.'));
         } finally {
           setIsConnectingOAuth(false);
           // Clean parameters
@@ -201,7 +208,7 @@ export const YoutubeDashboardPage: React.FC = () => {
       window.location.href = url;
     },
     onError: (err: any) => {
-      setErrorMessage(err.response?.data?.error || 'Failed to fetch authorization URL.');
+      setErrorMessage(getErrorMessage(err, 'Failed to fetch authorization URL.'));
     },
   });
 
@@ -216,7 +223,7 @@ export const YoutubeDashboardPage: React.FC = () => {
       setSelectedVideo(null);
     },
     onError: (err: any) => {
-      setErrorMessage(err.response?.data?.error || 'Failed to disconnect account.');
+      setErrorMessage(getErrorMessage(err, 'Failed to disconnect account.'));
     },
   });
 
@@ -232,7 +239,7 @@ export const YoutubeDashboardPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['youtube-voices'] });
     },
     onError: (err: any) => {
-      setErrorMessage(err.response?.data?.error || 'Invalid API Key or verification failed.');
+      setErrorMessage(getErrorMessage(err, 'Invalid API Key or verification failed.'));
     },
   });
 
@@ -250,7 +257,7 @@ export const YoutubeDashboardPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['youtube-jobs'] });
     },
     onError: (err: any) => {
-      setErrorMessage(err.response?.data?.error || 'Failed to schedule Short generation.');
+      setErrorMessage(getErrorMessage(err, 'Failed to schedule Short generation.'));
     },
   });
 
