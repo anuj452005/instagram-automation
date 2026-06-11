@@ -38,7 +38,7 @@ jobs:
         #   /db/                  - drizzle schema & migrations
         #   /package.json         - root workspace
         #   /package-lock.json    - lockfile for reproducible installs
-        # SCM_DO_BUILD_DURING_DEPLOYMENT=true tells Azure to run npm install on the server
+        # SCM_DO_BUILD_DURING_DEPLOYMENT=false because we package node_modules on the runner
         run: |
           mkdir -p deploy_pkg/backend
           cp -r backend/dist  deploy_pkg/backend/dist
@@ -50,6 +50,11 @@ jobs:
           # Create dummy frontend workspace to satisfy npm workspace resolution
           mkdir -p deploy_pkg/frontend
           echo '{"name": "gramflow-frontend", "version": "1.0.0"}' > deploy_pkg/frontend/package.json
+          
+          # Install production dependencies directly inside the package folder
+          cd deploy_pkg
+          npm install --omit=dev
+          cd ..
           
           cd deploy_pkg
           zip -r ../deploy.zip .
