@@ -7,6 +7,7 @@ on:
     paths:
       - 'backend/**'
       - 'db/**'
+      - 'drizzle.config.ts'
       - 'package.json'
       - 'package-lock.json'
 
@@ -17,24 +18,38 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Workspace Dependencies
+      - name: Install All Workspace Dependencies
         run: npm install
 
       - name: Compile Backend TypeScript
         run: npm run build:backend
 
-      - name: Package Artifacts
-        # Prepares a clean deployment package.
-        # Excludes large development dependencies and frontend code.
-        # Azure App Service will run "npm install --production" on the server.
+      - name: Prepare Production Deployment Package
+        # Creates a self-contained zip that Azure App Service can run with:
+        # SCM_DO_BUILD_DURING_DEPLOYMENT=true  →  Azure runs "npm install --production" server-side
+        # Package layout:
+        #   /backend/dist/        ← compiled JS (entry: dist/backend/src/index.js)
+        #   /backend/package.json ← backend dependencies list
+        #   /db/                  ← drizzle schema & migrations
+        #   /package.json         ← root workspace (npm start resolves here)
+        #   /package-lock.json    ← lockfile for reproducible installs
         run: |
-          zip -r deploy.zip backend/dist backend/package.json db package.json package-lock.json
+          mkdir -p deploy_pkg/backend
+          cp -r backend/dist  deploy_pkg/backend/dist
+          cp    backend/package.json deploy_pkg/backend/package.json
+          cp -r db            deploy_pkg/db
+          cp    package.json  deploy_pkg/package.json
+          cp    package-lock.json deploy_pkg/package-lock.json
+          cd deploy_pkg
+          zip -r ../deploy.zip .
+          cd ..
+          echo "Package size: $(du -sh deploy.zip | cut -f1)"
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
