@@ -13,6 +13,7 @@ import { PublicLeadPage } from './pages/PublicLeadPage';
 import { DashboardHomePage } from './pages/DashboardHomePage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { YoutubeDashboardPage } from './pages/YoutubeDashboardPage';
 import React from 'react';
 
 const queryClient = new QueryClient();
@@ -89,6 +90,7 @@ export default function App() {
               <Route path="leads" element={<LeadsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="accounts" element={<AccountsPage />} />
+              <Route path="youtube" element={<YoutubeDashboardPage />} />
             </Route>
 
             {/* Default Catch-all Redirect */}

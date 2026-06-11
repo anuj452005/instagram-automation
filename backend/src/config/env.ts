@@ -27,6 +27,10 @@ const envSchema = z.object({
   META_VERIFY_TOKEN: z.string().default('gramflow_verify_token'),
   // JWT secret for admin token signing
   JWT_SECRET: z.string().default('dev-secret'),
+  // Google API Settings for YouTube automation
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_REDIRECT_URI: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

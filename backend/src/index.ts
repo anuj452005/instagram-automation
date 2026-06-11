@@ -5,6 +5,7 @@ import './workers/dm-sender.worker';
 import './workers/lead-processor.worker';
 import './workers/analytics.worker';
 import './workers/scheduler.worker';
+import './workers/youtube.worker';
 import { setupScheduledActivationJob } from './queues/scheduler.queue';
 
 const port = env.PORT;

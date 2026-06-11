@@ -17,7 +17,7 @@ import {
   Zap,
   ShieldAlert,
 } from 'lucide-react';
-import { Instagram } from '../components/icons';
+import { Instagram, Youtube } from '../components/icons';
 
 export interface UserProfile {
   id: string;
@@ -132,6 +132,9 @@ export const DashboardLayout: React.FC = () => {
   } else if (currentPath.endsWith('/accounts')) {
     pageTitle = 'Instagram Accounts';
     pageDesc = 'Link and manage connected Instagram Creator or Business profiles.';
+  } else if (currentPath.endsWith('/youtube')) {
+    pageTitle = 'YouTube Automation';
+    pageDesc = 'Generate, schedule and upload YouTube Shorts automatically.';
   }
 
   return (
@@ -253,6 +256,23 @@ export const DashboardLayout: React.FC = () => {
               <>
                 <Instagram className={`size-4 ${isActive ? 'text-[#7f22fe]' : ''}`} />
                 Instagram Accounts
+              </>
+            )}
+          </NavLink>
+          <NavLink
+            to="/dashboard/youtube"
+            className={({ isActive }) =>
+              `font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-3 transition-colors text-left ${
+                isActive
+                  ? 'bg-[#1a1a1e] text-white'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#1a1a1e]/50'
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Youtube className={`size-4 ${isActive ? 'text-[#7f22fe]' : ''}`} />
+                YouTube Automation
               </>
             )}
           </NavLink>

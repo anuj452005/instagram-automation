@@ -215,6 +215,55 @@ export const adminUsers = pgTable('admin_users', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
+export const userSettings = pgTable('user_settings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull().unique(),
+  elevenLabsApiKey: text('eleven_labs_api_key'), // AES-256-GCM encrypted via encryption.service.ts
+  elevenLabsKeyUpdatedAt: timestamp('eleven_labs_key_updated_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const googleAccounts = pgTable('google_accounts', {
+  id: varchar('id', { length: 255 }).primaryKey(), // Google user / channel ID
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  displayName: varchar('display_name', { length: 255 }),
+  channelIconUrl: varchar('channel_icon_url', { length: 512 }),
+  accessToken: text('access_token').notNull(),   // AES-256-GCM encrypted
+  refreshToken: text('refresh_token').notNull(), // AES-256-GCM encrypted
+  tokenExpiry: timestamp('token_expiry'),
+  tokenStatus: varchar('token_status', { length: 50 }).default('valid').notNull(),
+  connectedAt: timestamp('connected_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    userGoogleUniqueIndex: uniqueIndex('user_google_unique_idx').on(table.userId, table.id),
+  };
+});
+
+export const youtubeJobs = pgTable('youtube_jobs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description'),
+  status: varchar('status', { length: 50 }).default('queued').notNull(), // queued | generating_audio | merging | uploading | scheduled | completed | failed
+  scheduledPublishTime: timestamp('scheduled_publish_time').notNull(), // Required — always scheduled
+  googleDriveFileId: varchar('google_drive_file_id', { length: 255 }).notNull(),
+  googleDriveFileName: varchar('google_drive_file_name', { length: 255 }).notNull(),
+  scriptText: text('script_text').notNull(),
+  voiceId: varchar('voice_id', { length: 100 }).notNull(),
+  voiceName: varchar('voice_name', { length: 100 }).notNull(),
+  privacyStatus: varchar('privacy_status', { length: 50 }).default('private').notNull(),
+  youtubeVideoId: varchar('youtube_video_id', { length: 100 }),
+  youtubeVideoUrl: varchar('youtube_video_url', { length: 512 }),
+  errorMessage: text('error_message'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+
 
 
 

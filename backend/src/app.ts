@@ -14,6 +14,7 @@ import { analyticsRouter } from './routes/analytics';
 import { adminRouter, serverAdapter, optionalClerkSync } from './routes/admin';
 import { adminAuthMiddleware } from './middleware/adminAuth.middleware';
 import { errorHandler } from './middleware/error.middleware';
+import { youtubeRouter } from './routes/youtube.routes';
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use(publicRouter);
 app.use('/api/leads', leadsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/youtube', youtubeRouter);
 app.use('/admin/queues', optionalClerkSync, adminAuthMiddleware, serverAdapter.getRouter());
 
 // Global Error Handler
