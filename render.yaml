@@ -10,10 +10,10 @@ services:
     name: gramflow-backend
     runtime: node
     rootDir: .
-    buildCommand: npm install && npm run build:backend
+    buildCommand: npm install && npm run build:backend && npm run db:migrate
     startCommand: node backend/dist/backend/src/index.js
     healthCheckPath: /health
-    plan: starter          # $7/mo — no sleep. Use 'free' to test first.
+    plan: free            # Free tier (sleeps after 15 mins of inactivity)
     envVars:
       - key: NODE_ENV
         value: production
