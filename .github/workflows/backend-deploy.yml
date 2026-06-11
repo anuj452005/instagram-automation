@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -32,14 +32,13 @@ jobs:
         run: npm run build:backend
 
       - name: Prepare Production Deployment Package
-        # Creates a self-contained zip that Azure App Service can run with:
-        # SCM_DO_BUILD_DURING_DEPLOYMENT=true  →  Azure runs "npm install --production" server-side
-        # Package layout:
-        #   /backend/dist/        ← compiled JS (entry: dist/backend/src/index.js)
-        #   /backend/package.json ← backend dependencies list
-        #   /db/                  ← drizzle schema & migrations
-        #   /package.json         ← root workspace (npm start resolves here)
-        #   /package-lock.json    ← lockfile for reproducible installs
+        # Creates a self-contained zip:
+        #   /backend/dist/        - compiled JS (entry: dist/backend/src/index.js)
+        #   /backend/package.json - backend dependencies
+        #   /db/                  - drizzle schema & migrations
+        #   /package.json         - root workspace
+        #   /package-lock.json    - lockfile for reproducible installs
+        # SCM_DO_BUILD_DURING_DEPLOYMENT=true tells Azure to run npm install on the server
         run: |
           mkdir -p deploy_pkg/backend
           cp -r backend/dist  deploy_pkg/backend/dist
@@ -47,13 +46,18 @@ jobs:
           cp -r db            deploy_pkg/db
           cp    package.json  deploy_pkg/package.json
           cp    package-lock.json deploy_pkg/package-lock.json
+          
+          # Create dummy frontend workspace to satisfy npm workspace resolution
+          mkdir -p deploy_pkg/frontend
+          echo '{"name": "gramflow-frontend", "version": "1.0.0"}' > deploy_pkg/frontend/package.json
+          
           cd deploy_pkg
           zip -r ../deploy.zip .
           cd ..
           echo "Package size: $(du -sh deploy.zip | cut -f1)"
 
       - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
