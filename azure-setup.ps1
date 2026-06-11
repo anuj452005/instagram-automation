@@ -6,7 +6,7 @@
 # ============================================================
 
 # --------------- 1. CONFIGURATION ----------------------------
-$RESOURCE_GROUP       = "gramflow-prod-rg"
+$RESOURCE_GROUP       = "gramflow-rg-eastasia"
 $LOCATION             = "eastasia"
 $SWA_LOCATION         = "eastasia"
 $APP_SERVICE_PLAN     = "gramflow-plan"
@@ -72,13 +72,26 @@ Write-Host "[Pre-flight] .env loaded. $($envVars.Count) variables found." -Foreg
 
 # --------------- 3. AZURE LOGIN ------------------------------
 Write-Host ""
-Write-Host "[Auth] Logging into Azure (a browser window will open)..." -ForegroundColor Cyan
-az login
+$account = az account show --query "user.name" -o tsv
 if ($LASTEXITCODE -ne 0) {
-  Write-Host "Azure login failed." -ForegroundColor Red
-  exit 1
+  $account = ""
 }
-Write-Host "[Auth] Login successful." -ForegroundColor Green
+
+if ($account -and $account.Trim() -ne "") {
+  Write-Host "[Auth] Already logged into Azure as $account." -ForegroundColor Green
+} else {
+  Write-Host "[Auth] Logging into Azure (a browser window will open)..." -ForegroundColor Cyan
+  az login
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "Azure login failed." -ForegroundColor Red
+    exit 1
+  }
+  Write-Host "[Auth] Login successful." -ForegroundColor Green
+}
+
+# Select the enabled subscription:
+Write-Host "[Auth] Setting subscription to 48e62192-f9ae-4a54-8ce2-571b906fdca8..." -ForegroundColor Cyan
+az account set --subscription "48e62192-f9ae-4a54-8ce2-571b906fdca8"
 
 # --------------- 3b. VERIFY REGION SUPPORTS APP SERVICE ------
 Write-Host ""
