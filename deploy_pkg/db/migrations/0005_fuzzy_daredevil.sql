@@ -1,0 +1,1 @@
+ALTER TABLE "leads" ALTER COLUMN "automation_id" DROP NOT NULL;

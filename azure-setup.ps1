@@ -130,6 +130,17 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
+# Enable SCM Basic Auth (required to fetch unredacted publishing profiles)
+Write-Host "[Config] Enabling SCM Basic Auth for Web App..." -ForegroundColor Cyan
+az resource update `
+  --resource-group $RESOURCE_GROUP `
+  --name scm `
+  --namespace Microsoft.Web `
+  --resource-type basicPublishingCredentialsPolicies `
+  --parent sites/$BACKEND_WEBAPP_NAME `
+  --set properties.allow=true `
+  --output none
+
 # Configure startup command (npm start runs: node dist/backend/src/index.js)
 Write-Host "[Config] Setting startup command: npm start..." -ForegroundColor Cyan
 az webapp config set `
