@@ -38,9 +38,9 @@ services:
       - key: MOCK_META_API
         value: "false"
       - key: ENCRYPTION_KEY
-        generateValue: true  # Render auto-generates a secure random string
+        sync: false         # Set a static key to match your local .env key (prevents decryption failures)
       - key: JWT_SECRET
-        generateValue: true  # Render auto-generates a secure random string
+        sync: false         # Set a static JWT secret to keep session tokens consistent
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
