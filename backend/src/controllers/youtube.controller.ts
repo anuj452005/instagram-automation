@@ -140,8 +140,15 @@ export const listDriveVideos = async (req: Request, res: Response, next: NextFun
       return res.status(400).json({ success: false, error: 'Google account not connected.' });
     }
 
-    let accessToken = decrypt(account.accessToken);
-    const refreshToken = decrypt(account.refreshToken);
+    let accessToken = '';
+    let refreshToken = '';
+    try {
+      accessToken = decrypt(account.accessToken);
+      refreshToken = decrypt(account.refreshToken);
+    } catch (decErr) {
+      console.error('❌ [YouTubeController.listDriveVideos] Decryption failed:', decErr);
+      return res.status(401).json({ success: false, error: 'Google authentication credentials could not be decrypted. Please reconnect your account.' });
+    }
 
     // Refresh access token if expired
     const now = new Date();
@@ -196,7 +203,24 @@ export const getSettings = async (req: Request, res: Response, next: NextFunctio
       return res.json({ success: true, elevenLabsKeyConfigured: false });
     }
 
-    const rawKey = decrypt(settings.elevenLabsApiKey);
+    let rawKey = '';
+    let decryptionFailed = false;
+    try {
+      rawKey = decrypt(settings.elevenLabsApiKey);
+    } catch (decErr) {
+      console.error('❌ [YouTubeController.getSettings] Decryption failed:', decErr);
+      decryptionFailed = true;
+    }
+
+    if (decryptionFailed) {
+      return res.json({
+        success: true,
+        elevenLabsKeyConfigured: false,
+        decryptionFailed: true,
+        updatedAt: settings.elevenLabsKeyUpdatedAt || settings.updatedAt,
+      });
+    }
+
     const maskedKey =
       rawKey.length > 8
         ? `${rawKey.substring(0, 3)}••••••••${rawKey.substring(rawKey.length - 4)}`
@@ -280,7 +304,13 @@ export const getVoices = async (req: Request, res: Response, next: NextFunction)
       return res.status(400).json({ success: false, error: 'ElevenLabs API key not configured.' });
     }
 
-    const apiKey = decrypt(settings.elevenLabsApiKey);
+    let apiKey = '';
+    try {
+      apiKey = decrypt(settings.elevenLabsApiKey);
+    } catch (decErr) {
+      console.error('❌ [YouTubeController.getVoices] Decryption failed:', decErr);
+      return res.status(400).json({ success: false, error: 'Failed to decrypt ElevenLabs API Key. Please update it in Settings.' });
+    }
     const voices = await ElevenLabsService.getVoices(apiKey);
     res.json({ success: true, voices });
   } catch (err: any) {
